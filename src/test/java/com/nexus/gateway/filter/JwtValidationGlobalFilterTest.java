@@ -134,4 +134,26 @@ class JwtValidationGlobalFilterTest {
         assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(chain, never()).filter(any());
     }
+
+    @Test
+    void allowsGetOnAuctionsPathWithoutToken() {
+        when(chain.filter(any())).thenReturn(Mono.empty());
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/api/v1/auctions/a-id/bids").build());
+
+        filter.filter(exchange, chain).block();
+
+        verify(chain).filter(exchange);
+    }
+
+    @Test
+    void rejectsPostOnAuctionsBidsPathWithoutToken() {
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/api/v1/auctions/a-id/bids").build());
+
+        filter.filter(exchange, chain).block();
+
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        verify(chain, never()).filter(any());
+    }
 }

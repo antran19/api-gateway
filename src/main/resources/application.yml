@@ -15,6 +15,10 @@ spring:
           uri: lb://catalog-service
           predicates:
             - Path=/api/v1/products/**,/api/v1/categories/**
+        - id: auction-service
+          uri: lb://auction-service
+          predicates:
+            - Path=/api/v1/auctions/**
 
 eureka:
   client:

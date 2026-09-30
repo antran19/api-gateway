@@ -32,6 +32,7 @@ public class JwtValidationGlobalFilter implements GlobalFilter, Ordered {
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
     private static final String PRODUCTS_PATTERN = "/api/v1/products/**";
     private static final String CATEGORIES_PATTERN = "/api/v1/categories/**";
+    private static final String AUCTIONS_PATTERN = "/api/v1/auctions/**";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
@@ -85,7 +86,8 @@ public class JwtValidationGlobalFilter implements GlobalFilter, Ordered {
             return true;
         }
         if (HttpMethod.GET.equals(request.getMethod())
-                && (PATH_MATCHER.match(PRODUCTS_PATTERN, path) || PATH_MATCHER.match(CATEGORIES_PATTERN, path))) {
+                && (PATH_MATCHER.match(PRODUCTS_PATTERN, path) || PATH_MATCHER.match(CATEGORIES_PATTERN, path)
+                    || PATH_MATCHER.match(AUCTIONS_PATTERN, path))) {
             return true;
         }
         return false;
