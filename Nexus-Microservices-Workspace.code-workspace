@@ -23,6 +23,10 @@
 		{
 			"name": "Infrastructure",
 			"path": "../infra"
+		},
+		{
+			"name": "Auction Service",
+			"path": "../auction-service"
 		}
 	],
 	"settings": {}
