@@ -19,6 +19,17 @@ spring:
           uri: lb://auction-service
           predicates:
             - Path=/api/v1/auctions/**
+      # Dev-only CORS: allows any localhost origin/port (the FE dev server's exact port
+      # isn't fixed yet) so browser-based requests from the frontend aren't blocked.
+      # allowedOriginPatterns (not allowedOrigins) is required here because
+      # allowCredentials=true forbids the literal wildcard "*" origin.
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "http://localhost:*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
 
 eureka:
   client:
