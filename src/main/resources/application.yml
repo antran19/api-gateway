@@ -23,6 +23,10 @@ spring:
           uri: lb://notification-service
           predicates:
             - Path=/api/v1/notifications/**
+        - id: commerce-service
+          uri: lb://commerce-service
+          predicates:
+            - Path=/api/v1/carts/**,/api/v1/checkout,/api/v1/orders/**
       # Dev-only CORS: allows any localhost origin/port (the FE dev server's exact port
       # isn't fixed yet) so browser-based requests from the frontend aren't blocked.
       # allowedOriginPatterns (not allowedOrigins) is required here because
