@@ -85,6 +85,10 @@ public class JwtValidationGlobalFilter implements GlobalFilter, Ordered {
         if (path.equals("/actuator") || path.startsWith("/actuator/")) {
             return true;
         }
+        // Stripe calls this with no JWT; commerce-service verifies Stripe's signature instead.
+        if (HttpMethod.POST.equals(request.getMethod()) && path.equals("/api/v1/payments/webhook")) {
+            return true;
+        }
         if (HttpMethod.GET.equals(request.getMethod())
                 && (PATH_MATCHER.match(PRODUCTS_PATTERN, path) || PATH_MATCHER.match(CATEGORIES_PATTERN, path)
                     || PATH_MATCHER.match(AUCTIONS_PATTERN, path))) {

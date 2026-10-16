@@ -26,7 +26,7 @@ spring:
         - id: commerce-service
           uri: lb://commerce-service
           predicates:
-            - Path=/api/v1/carts/**,/api/v1/checkout,/api/v1/orders/**,/api/v1/returns/**
+            - Path=/api/v1/carts/**,/api/v1/checkout,/api/v1/orders/**,/api/v1/returns/**,/api/v1/payments/webhook
         # Only /inventory is exposed (stock lookup, a seller's restock, an admin's intake). The
         # manual /reservations API stays internal: commerce drives reservations over Kafka.
         - id: fulfillment-service

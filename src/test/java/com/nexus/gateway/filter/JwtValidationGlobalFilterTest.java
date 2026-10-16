@@ -114,6 +114,28 @@ class JwtValidationGlobalFilterTest {
     }
 
     @Test
+    void allowsStripeWebhookPostWithoutToken() {
+        when(chain.filter(any())).thenReturn(Mono.empty());
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/api/v1/payments/webhook").build());
+
+        filter.filter(exchange, chain).block();
+
+        verify(chain).filter(exchange);
+    }
+
+    @Test
+    void rejectsGetOnStripeWebhookPathWithoutToken() {
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/api/v1/payments/webhook").build());
+
+        filter.filter(exchange, chain).block();
+
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        verify(chain, never()).filter(any());
+    }
+
+    @Test
     void allowsGetOnCategoriesPathWithoutToken() {
         when(chain.filter(any())).thenReturn(Mono.empty());
         ServerWebExchange exchange = MockServerWebExchange.from(
