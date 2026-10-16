@@ -27,6 +27,12 @@ spring:
           uri: lb://commerce-service
           predicates:
             - Path=/api/v1/carts/**,/api/v1/checkout,/api/v1/orders/**,/api/v1/returns/**
+        # Only /inventory is exposed (stock lookup, a seller's restock, an admin's intake). The
+        # manual /reservations API stays internal: commerce drives reservations over Kafka.
+        - id: fulfillment-service
+          uri: lb://fulfillment-service
+          predicates:
+            - Path=/api/v1/inventory/**
       # Dev-only CORS: allows any localhost origin/port (the FE dev server's exact port
       # isn't fixed yet) so browser-based requests from the frontend aren't blocked.
       # allowedOriginPatterns (not allowedOrigins) is required here because
