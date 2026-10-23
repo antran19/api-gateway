@@ -10,7 +10,8 @@ spring:
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/api/v1/users/**,/api/v1/auth/**
+            # /ratings: POST /api/v1/ratings lives in user-service (API.md 2.7); it was never routed here.
+            - Path=/api/v1/users/**,/api/v1/auth/**,/api/v1/ratings/**
         - id: catalog-service
           uri: lb://catalog-service
           predicates:
