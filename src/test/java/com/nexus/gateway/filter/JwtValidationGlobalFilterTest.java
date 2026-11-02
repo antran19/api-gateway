@@ -34,6 +34,50 @@ class JwtValidationGlobalFilterTest {
     }
 
     @Test
+    void allowsForgotPasswordPostWithoutToken() {
+        when(chain.filter(any())).thenReturn(Mono.empty());
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/api/v1/auth/forgot-password").build());
+
+        filter.filter(exchange, chain).block();
+
+        verify(chain).filter(exchange);
+    }
+
+    @Test
+    void allowsResetPasswordPostWithoutToken() {
+        when(chain.filter(any())).thenReturn(Mono.empty());
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/api/v1/auth/reset-password").build());
+
+        filter.filter(exchange, chain).block();
+
+        verify(chain).filter(exchange);
+    }
+
+    @Test
+    void rejectsGetOnForgotPasswordPathWithoutToken() {
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/api/v1/auth/forgot-password").build());
+
+        filter.filter(exchange, chain).block();
+
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        verify(chain, never()).filter(any());
+    }
+
+    @Test
+    void rejectsOtherAuthPathsWithoutToken() {
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/api/v1/auth/logout").build());
+
+        filter.filter(exchange, chain).block();
+
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        verify(chain, never()).filter(any());
+    }
+
+    @Test
     void rejectsSiblingPathThatOnlySharesPublicPrefixWithoutToken() {
         ServerWebExchange exchange = MockServerWebExchange.from(
                 MockServerHttpRequest.get("/api/v1/users/register-status").build());

@@ -82,6 +82,12 @@ public class JwtValidationGlobalFilter implements GlobalFilter, Ordered {
         if (path.equals("/api/v1/users/register") || path.equals("/api/v1/auth/login")) {
             return true;
         }
+        // A person who forgot their password has no token by definition. user-service already
+        // lists both as public; without this the gateway answered 401 before the request got there.
+        if (HttpMethod.POST.equals(request.getMethod())
+                && (path.equals("/api/v1/auth/forgot-password") || path.equals("/api/v1/auth/reset-password"))) {
+            return true;
+        }
         if (path.equals("/actuator") || path.startsWith("/actuator/")) {
             return true;
         }
